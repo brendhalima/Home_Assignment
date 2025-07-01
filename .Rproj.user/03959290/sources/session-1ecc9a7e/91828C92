@@ -1,26 +1,26 @@
 {
-    "id": "50BCEA01",
-    "path": "~/Home_Assignment/ui.R",
-    "project_path": "ui.R",
+    "id": "91828C92",
+    "path": "~/Home_Assignment/server.R",
+    "project_path": "server.R",
     "type": "r_source",
-    "hash": "2779097235",
+    "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1751324138034.0,
+    "created": 1751324136495.0,
     "source_on_save": false,
-    "relative_order": 2,
+    "relative_order": 1,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "99,2",
-        "scrollLine": "94"
+        "cursorPosition": "106,77",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1751407993,
+    "lastKnownWriteTime": 1751407973,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1751407993384,
+    "last_content_update": 1751407973100,
     "read_only": false,
     "read_only_alternatives": []
 }
