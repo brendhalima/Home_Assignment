@@ -3,7 +3,7 @@
     "path": "~/Home_Assignment/server.R",
     "project_path": "server.R",
     "type": "r_source",
-    "hash": "3018791322",
+    "hash": "3894469245",
     "contents": "",
     "dirty": false,
     "created": 1751324136495.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "75,49",
-        "scrollLine": "52"
+        "cursorPosition": "106,77",
+        "scrollLine": "88"
     },
     "folds": "",
-    "lastKnownWriteTime": 1751403565,
+    "lastKnownWriteTime": 1751407973,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1751403565267,
+    "last_content_update": 1751407973100,
     "read_only": false,
     "read_only_alternatives": []
 }

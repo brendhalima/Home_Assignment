@@ -3,7 +3,7 @@
     "path": "~/Home_Assignment/global.R",
     "project_path": "global.R",
     "type": "r_source",
-    "hash": "1892672346",
+    "hash": "1315486946",
     "contents": "",
     "dirty": false,
     "created": 1751332888718.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "4,15",
+        "cursorPosition": "11,66",
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1751400734,
+    "lastKnownWriteTime": 1751407993,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1751400734445,
+    "last_content_update": 1751407993369,
     "read_only": false,
     "read_only_alternatives": []
 }

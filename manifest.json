@@ -2165,7 +2165,7 @@
       "checksum": "3e6bd24764f719554be7430431ac90de"
     },
     "global.R": {
-      "checksum": "58e14cebc08dc3f7cb4e3ef8bd567861"
+      "checksum": "9119e600a50e1c47ea2217de64b6cbc2"
     },
     "market_projection.csv": {
       "checksum": "b367562a35003e3b1ff2b8b5e4b6efd9"
@@ -2174,10 +2174,10 @@
       "checksum": "313901ab89eaae361d88651decef12b0"
     },
     "server.R": {
-      "checksum": "96da6ac9b187aa89005a86b9022773d6"
+      "checksum": "31ac93a431f458b5ea33a34f754cd553"
     },
     "ui.R": {
-      "checksum": "c63352f57401d2d00fc2f1a06281209d"
+      "checksum": "ec77f61bd0a45121463fb94d7b0920cc"
     },
     "www/custom.css": {
       "checksum": "3744a7de6a34229558a6cc13e6e261bc"

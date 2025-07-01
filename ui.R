@@ -1,7 +1,9 @@
 fluidPage(
+  
+  # Enable shinyjs to use JavaScript-based UI manipulations
   useShinyjs(),
   
-  # Choice Theme
+  # Set Bootstrap 5 theme using bslib, with "cosmo" bootswatch theme and custom primary color
   theme = bs_theme(
     version = 5,
     bootswatch = "cosmo",
@@ -9,32 +11,41 @@ fluidPage(
     font_scale = 0.9
   ),
   
+  # Main page title
+  
   titlePanel("📊 Market Data"),
   
+  # Help button (question mark icon), floated top-right with custom margins
   actionButton("toggle_guide", label = NULL, icon = icon("circle-question"), 
                class = "btn btn-outline-info", style = "float: right; margin-top: -40px; margin-right: 10px;"),
   
   
-  # Market selector and reset button
+  # Row containing market selector dropdown and Reset Data button
   fluidRow(
     column(
       width = 4,
+      # Dropdown input for selecting the market; choices populated dynamically in server
       selectInput("selected_market", "Select Market:", choices = NULL)
     ),
     column(
       width = 8,
       br(),
+      # Red "Reset Data" button with refresh icon, used to undo edits
       actionButton("reset_data", "Reset Data", icon = icon("arrow-rotate-left"), class = "btn btn-danger")
     )
   ),
   
   hr(),
   
+  # Main content row split into two columns:
+  # Left: editable data table
+  # Right: comparison plot
+  
   fluidRow(
     column(
       width = 7,
       
-      # Linha com título e botão lado a lado
+      # Sub-row with table title and Download Data button aligned right
       fluidRow(
         column(
           width = 8,
@@ -42,22 +53,30 @@ fluidPage(
         ),
         column(
           width = 4,
+          # Green button to download the data shown in the table, floated right
           downloadButton("download_data", "Download Data", class = "btn btn-success", style = "float: right;")
         )
       ),
       
+      # Instruction text for table interaction
       helpText("Double-click on a cell to edit. Use arrow keys to navigate. Click 'Reset Data' to revert changes."),
+      
+      # Output placeholder for the editable data table (DT package)
       DTOutput("editable_table"),
       br(), br()
     ),
     
     column(
       width = 5,
+      # Title for the comparison plot
       h4("📈 Comparison Plot"),
       br(),br(),br(),
+      # Placeholder for the interactive plot (Plotly)
       plotlyOutput("market_plot", height = "400px")
     )
   ),
+  
+  # Hidden user guide panel that can be toggled with the help button
   
   div(
     id = "user_guide_panel",
@@ -76,6 +95,8 @@ fluidPage(
       )
     )
   ), 
+  
+  # Footer fixed at the bottom of the page
   
   tags$footer(
     style = "
