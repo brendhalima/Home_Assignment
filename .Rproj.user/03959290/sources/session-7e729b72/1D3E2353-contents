@@ -1,0 +1,101 @@
+library(data.table)
+library(readxl)
+library(zoo)
+
+# 1. Load the data from Excel sheets
+market_raw <- as.data.table(read_excel("data_P2_ds_test.xlsx", sheet = "MARKET"))
+ref_raw <- as.data.table(read_excel("data_P2_ds_test.xlsx", sheet = "REFERENCE_MARKET"))
+
+# Convert TERM column to Date format
+market_raw[, TERM := as.Date(TERM)]
+ref_raw[, TERM := as.Date(TERM)]
+
+# 2. Define reference mapping for each market
+ref_dict <- data.table(
+  MARKET = paste0("MARKET_", 1:7),
+  REFERENCE = c("REF_MARKET_2", "MARKET_1", "REF_MARKET_2", 
+                "REF_MARKET_1", "REF_MARKET_3", "MARKET_5", "REF_MARKET_2")
+)
+
+# 3. Reshape market data to long format
+market_long <- melt(market_raw, id.vars = "TERM", variable.name = "MARKET", value.name = "VALUE")
+
+# 4. Calculate growth factors for reference markets
+ref_factors <- copy(ref_raw)
+setnames(ref_factors, c("TERM", "MARKET", "VALUE"))
+setorder(ref_factors, MARKET, TERM)
+ref_factors[, FACTOR := VALUE / shift(VALUE), by = MARKET]
+ref_factors <- ref_factors[!is.na(FACTOR)]
+
+# 5. Function to project missing values for a market using a reference
+project_market <- function(market_name, ref_name, completed_markets) {
+  # Get known values for the target market
+  known_vals <- market_long[MARKET == market_name & !is.na(VALUE)]
+  last_term <- max(known_vals$TERM)
+  last_value <- known_vals[TERM == last_term, VALUE]
+  
+  # Retrieve growth factors from reference market
+  if (grepl("^REF_", ref_name)) {
+    ref_seq <- ref_factors[MARKET == ref_name & TERM > last_term]
+  } else {
+    ref_series <- completed_markets[MARKET == ref_name][order(TERM)]
+    ref_series[, FACTOR := VALUE / shift(VALUE)]
+    ref_seq <- ref_series[TERM > last_term & !is.na(FACTOR), .(TERM, FACTOR)]
+  }
+  
+  # Determine how many values need to be projected
+  n_missing <- 48 - nrow(known_vals)
+  ref_seq <- ref_seq[1:n_missing]
+  
+  # Apply cumulative product of growth factors to project values
+  projected_values <- cumprod(c(1, ref_seq$FACTOR))[-1] * last_value
+  
+  # Combine known and projected values
+  projected <- data.table(
+    TERM = ref_seq$TERM,
+    MARKET = market_name,
+    VALUE = projected_values
+  )
+  
+  rbind(known_vals, projected)
+}
+
+# 6. Generate completed time series for all markets
+completed_list <- list()
+for (i in 1:7) {
+  mk <- paste0("MARKET_", i)
+  ref <- ref_dict[MARKET == mk, REFERENCE]
+  ref_data <- rbindlist(completed_list, fill = TRUE)
+  
+  full_data <- project_market(mk, ref, ref_data)
+  full_data <- full_data[order(TERM)]
+  completed_list[[i]] <- full_data
+}
+
+# 7. Combine all completed market series
+all_data <- rbindlist(completed_list)
+
+# 8. Define the full set of 48 monthly terms starting from April 2024
+start_date <- as.Date("2024-04-01")
+all_terms <- seq(start_date, by = "month", length.out = 48)
+
+# 9. Ensure completeness by expanding all combinations of TERM and MARKET
+all_data <- all_data[CJ(TERM = all_terms, MARKET = unique(all_data$MARKET), unique = TRUE),
+                     on = .(TERM, MARKET)]
+
+# 10. Fill missing values using Last Observation Carried Forward (LOCF)
+all_data[, VALUE := na.locf(VALUE, na.rm = FALSE), by = MARKET]
+
+# 11. If any NA values remain (e.g., at the beginning), fill them with the first non-NA value
+all_data[, VALUE := na.locf(VALUE, fromLast = TRUE, na.rm = FALSE), by = MARKET]
+
+# 12. Reshape data back to wide format and round values
+final_output <- dcast(all_data, TERM ~ MARKET, value.var = "VALUE")
+final_output <- final_output[, (names(final_output)[-1]) := lapply(.SD, function(x) round(x, 2)), .SDcols = -1]
+
+# 13. Display the final result
+print(final_output)
+
+# 14. Export the final output to a CSV file
+write.csv(final_output, "market_projection.csv")
+
